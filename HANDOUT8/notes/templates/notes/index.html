@@ -13,6 +13,7 @@
 </form>
   
 <ul>
-  <li>{{ notes }}</li>
-</ul>
+  {% for note in notes %}
+  <li>{{ note.title }} </li>
+  {% endfor %}</ul>
 {% endblock %}

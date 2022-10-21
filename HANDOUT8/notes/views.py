@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.http import Http404
 from .models import Note
-from django.utils import timezone
-
+from .serializers import NoteSerializer
 
 
 def index(request):
@@ -13,9 +15,8 @@ def index(request):
         note.save()
         return redirect('index')
     else:
-        last_note = Note.objects.order_by()
-        print(last_note)
-        return render(request, 'notes/index.html', {'notes': last_note.last()})
+        all_notes = Note.objects.all()
+        return render(request, 'notes/index.html', {'notes': all_notes})
 
 def delete_post(request):
     id = request.POST.get('id')
@@ -32,3 +33,26 @@ def update_post(request, id):
    emp.content = request.POST.get('content')
    emp.save()
    return render(request, 'notes/edit.html', {'note': emp})
+
+@api_view(['GET', 'POST'])
+def api_note(request, note_id):
+    try:
+        note = Note.objects.get(id=note_id)
+    except Note.DoesNotExist:
+        raise Http404()
+    if request.method == 'POST':
+        new_note_data = request.data
+        note.title = new_note_data['title']
+        note.content = new_note_data['content']
+        note.save()
+
+    serialized_note = NoteSerializer(note)
+    return Response(serialized_note.data)
+@api_view(['GET'])
+def api_note_all(request):
+    try:
+        note = Note.objects.all()
+    except:
+        raise Http404()
+    serialized_note = NoteSerializer(note, many=True)
+    return Response(serialized_note.data)
