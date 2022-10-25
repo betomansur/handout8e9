@@ -24,7 +24,7 @@
 
 <body><div class="appbar">
   <img src="{% static 'notes/img/logo-getit.png' %}" class="logo" />
-  <span class="subtitle">Como o Post-it, mas com outro verbo</span>
+  <span class="subtitle">Editar o post </span>
 </div>
 
 <main class="container">
@@ -36,34 +36,18 @@
   type="text"
   name="titulo"
   id="titulo"
-  placeholder="Título" />
+  placeholder="Título" 
+  value="{{note.title}}"/>
   <label for="detalhes">Detalhes</label>
   <textarea 
   class="autoresize"
   name="detalhes"
   id="detalhes"
   placeholder="Digite o conteúdo..."></textarea>
-  <button class="btn" type="submit">Criar</button>
+  <button class="btn" type="submit">Editar</button>
 </form>
 
-<div class="card-container">
-  {% for note in notes %}
-  <div class="card">
-    <h3 class="card-title">{{note.title}}</h3>
-    <div class="card-content">
-      <p>{{note.content}}</p>
-      <form action="delete" method="post">
-        {% csrf_token %}
-        <input type="hidden" value="{{note.id}}" name="id">
-        <input type="submit" value="🗑️" />
 
-    </form>
-
-  <a href="update/{{note.id}}">✏️</a>
-
-    </div>
-  </div>    {% endfor %}
-</div>
 
 
 {% endblock %}

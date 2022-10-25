@@ -6,6 +6,11 @@ from .models import Note
 from .serializers import NoteSerializer
 
 
+from turtle import title
+from django.shortcuts import render, redirect
+from .models import Note
+
+
 def index(request):
     if request.method == 'POST':
         title = request.POST.get('titulo')
@@ -24,15 +29,27 @@ def delete_post(request):
     post_to_delete.delete()
     return redirect("/") #(#name of the view function that returns your posts page)
 
-def update_post(request, id):
-   emp = Note.objects.get(pk = id)
-   #you can do this for as many fields as you like
-   #here I asume you had a form with input like <input type="text" name="name"/>
-   #so it's basically like that for all form fields
-   emp.title = request.POST.get('title')
-   emp.content = request.POST.get('content')
-   emp.save()
-   return render(request, 'notes/edit.html', {'note': emp})
+# def update_post(request,id):
+#    emp = Note.objects.get(pk = id)
+#    print(emp.title)
+#    print(emp.content)
+#    content = request.POST.get('detalhes')
+#    note = Note(title= emp.title, content= emp.content)        
+
+#    note.save()
+#    return render(request, 'notes/edit.html', {'note': note})
+
+def update_post(request,id):
+    if request.method == 'POST':
+        inputtitle = request.POST.get('titulo')
+        inputcontent = request.POST.get('detalhes')
+        Note.objects.filter(id = id).update(title = inputtitle, content = inputcontent)
+        return redirect('/')
+    else:
+        note = Note.objects.get(id = id)
+        return render(request, 'notes/index.html', {"note":note})
+
+
 
 @api_view(['GET', 'POST'])
 def api_note(request, note_id):
