@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Note from "./components/Note";
@@ -17,7 +16,8 @@ function App() {
 
   return (
     <div className="App">
-      <img src="/logo-getit.png" />
+        <img src="/logo-getit.png" />
+
       {notes.map((note) => (
         <Note key={`note__${note.id}`} title={note.title}>
           {note.content}
